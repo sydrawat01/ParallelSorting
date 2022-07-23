@@ -2,6 +2,7 @@ package edu.neu.coe.info6205.parallel;
 
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ForkJoinPool;
 
 /**
  * This code has been fleshed out by Ziyao Qiao. Thanks very much.
@@ -11,12 +12,12 @@ import java.util.concurrent.CompletableFuture;
 public class ParallelSort {
     public static int cutoff = 1000;
 
-    public static void sort(int[] array, int from, int to) {
+    public static void sort(int[] array, int from, int to, ForkJoinPool pool) {
         if (to - from < cutoff) Arrays.sort(array, from, to);
         else {
             // FIXME next few lines should be removed from public repo.
-            CompletableFuture<int[]> parallelSort1 = parallelSort(array, from, from + (to - from) / 2); // TO IMPLEMENT
-            CompletableFuture<int[]> parallelSort2 = parallelSort(array, from + (to - from) / 2, to); // TO IMPLEMENT
+            CompletableFuture<int[]> parallelSort1 = parallelSort(array, from, from + (to - from) / 2, pool); // TO IMPLEMENT
+            CompletableFuture<int[]> parallelSort2 = parallelSort(array, from + (to - from) / 2, to, pool); // TO IMPLEMENT
             CompletableFuture<int[]> parallelSort = parallelSort1.thenCombine(parallelSort2, (xs1, xs2) -> {
                 int[] result = new int[xs1.length + xs2.length];
                 // TO IMPLEMENT
@@ -42,13 +43,13 @@ public class ParallelSort {
         }
     }
 
-    private static CompletableFuture<int[]> parallelSort(int[] array, int from, int to) {
+    private static CompletableFuture<int[]> parallelSort(int[] array, int from, int to, ForkJoinPool pool) {
         return CompletableFuture.supplyAsync(
                 () -> {
                     int[] result = new int[to - from];
                     // TO IMPLEMENT
                     System.arraycopy(array, from, result, 0, result.length);
-                    sort(result, 0, to - from);
+                    sort(result, 0, to - from, pool);
                     return result;
                 }
         );
