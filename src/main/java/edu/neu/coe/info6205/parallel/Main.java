@@ -17,15 +17,15 @@ import java.util.concurrent.ForkJoinPool;
 public class Main {
     public static void main(String[] args) {
         processArgs(args);
-        int threadCount = 1, arraySize = 500000;
-        while (threadCount < 33) {
-            ForkJoinPool pool = new ForkJoinPool(threadCount);
+        int thread = 1, arraySize = 500000;
+        while (thread < 65) {
+            ForkJoinPool pool = new ForkJoinPool(thread);
             System.out.println("Degree of parallelism: " + pool.getParallelism());
             Random random = new Random();
             int[] array = new int[arraySize];
             ArrayList<Long> timeList = new ArrayList<>();
             for (int j = 0; j < 20; j++) {
-                ParallelSort.cutoff = 1000* (j + 1);
+                ParallelSort.cutoff = 2000 * (j + 1);
                 // for (int i = 0; i < array.length; i++) array[i] = random.nextInt(10000000);
                 long time;
                 long startTime = System.currentTimeMillis();
@@ -38,15 +38,15 @@ public class Main {
                 time = (endTime - startTime);
                 timeList.add(time);
 
-                System.out.println("cutoff：" + (ParallelSort.cutoff) + "\t\t10times Time:" + time + "ms");
+                System.out.println("cutoff：" + (ParallelSort.cutoff) + "\t\t10 times Time:" + time + "ms");
             }
             try {
-                FileOutputStream fis = new FileOutputStream("./data/result_arrSize_" + arraySize + "_threadCount_" + threadCount + ".csv");
+                FileOutputStream fis = new FileOutputStream("./data/result_" + arraySize + "_thread_" + thread + ".csv");
                 OutputStreamWriter isr = new OutputStreamWriter(fis);
                 BufferedWriter bw = new BufferedWriter(isr);
                 int j = 0;
                 for (long i : timeList) {
-                    String content = (double) 10000 * (j + 1) / 2000000 + "," + (double) i / 10 + "\n";
+                    String content = (double) 10000 * (j + 1) / arraySize + "," + (double) i / 10 + "\n";
                     j++;
                     bw.write(content);
                     bw.flush();
@@ -56,15 +56,7 @@ public class Main {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            // Update the threadCount
-            if (threadCount == 1) {
-                // Change from 1 to 2
-                threadCount *= 2;
-            } else {
-                // increase by 2
-                threadCount = threadCount + 2;
-            }
+            thread *= 2;
         }
     }
 

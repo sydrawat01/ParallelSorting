@@ -51,7 +51,7 @@ public class ParallelSort {
                     System.arraycopy(array, from, result, 0, result.length);
                     sort(result, 0, to - from, pool);
                     return result;
-                }
+                }, pool
         );
     }
 }
