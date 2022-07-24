@@ -17,7 +17,7 @@ import java.util.concurrent.ForkJoinPool;
 public class Main {
     public static void main(String[] args) {
         processArgs(args);
-        int thread = 1, arraySize = 500000;
+        int thread = 2, arraySize = 1000000;
         while (thread < 65) {
             ForkJoinPool pool = new ForkJoinPool(thread);
             System.out.println("Degree of parallelism: " + pool.getParallelism());
@@ -46,7 +46,7 @@ public class Main {
                 BufferedWriter bw = new BufferedWriter(isr);
                 int j = 0;
                 for (long i : timeList) {
-                    String content = (double) 10000 * (j + 1) / arraySize + "," + (double) i / 10 + "\n";
+                    String content = (double) ParallelSort.cutoff * (j + 1) / arraySize + "," + (double) i / 10 + "\n";
                     j++;
                     bw.write(content);
                     bw.flush();
