@@ -17,15 +17,15 @@ import java.util.concurrent.ForkJoinPool;
 public class Main {
     public static void main(String[] args) {
         processArgs(args);
-        int thread = 2, arraySize = 1000000;
+        int thread = 2, arraySize = 800000;
         while (thread < 65) {
             ForkJoinPool pool = new ForkJoinPool(thread);
             System.out.println("Degree of parallelism: " + pool.getParallelism());
             Random random = new Random();
             int[] array = new int[arraySize];
             ArrayList<Long> timeList = new ArrayList<>();
-            for (int j = 0; j < 20; j++) {
-                ParallelSort.cutoff = 2000 * (j + 1);
+            for (int j = 0; j < 10; j++) {
+                ParallelSort.cutoff = 40000 * (j + 1);
                 // for (int i = 0; i < array.length; i++) array[i] = random.nextInt(10000000);
                 long time;
                 long startTime = System.currentTimeMillis();
